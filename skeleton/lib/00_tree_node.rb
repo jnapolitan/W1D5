@@ -12,7 +12,11 @@ class PolyTreeNode
   
   def parent=(parent_node)
     if parent_node
-      @parent = parent_node unless @parent
+      if @parent
+        @parent.children.delete(self)
+        @parent = nil
+      end
+      @parent = parent_node
       @parent.children << self unless @parent.children.include?(self)
     else
       @parent = nil
