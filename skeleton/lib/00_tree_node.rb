@@ -23,6 +23,17 @@ class PolyTreeNode
     end
   end
   
+  def add_child(child_node)
+    child_node.parent = self
+    self.children << child_node unless self.children.include?(child_node)
+  end
+  
+  def remove_child(child_node)
+    raise "That's not a child!" if !self.children.include?(child_node)
+    self.children.delete(child_node)
+    child_node.parent = nil
+  end
+  
   def parent
     @parent
   end
