@@ -2,12 +2,22 @@ require 'byebug'
 
 class PolyTreeNode
   
-  attr_reader :parent
-  
   def initialize(value)
     @value = value
     @parent = nil
     @children = []
+  end
+  
+  def parent
+    @parent
+  end
+  
+  def children
+    @children
+  end
+  
+  def value
+    @value
   end
   
   def parent=(parent_node)
@@ -34,16 +44,27 @@ class PolyTreeNode
     child_node.parent = nil
   end
   
-  def parent
-    @parent
+  def dfs(target_value)
+    return self if self.value == target_value
+    
+    self.children.each do |child|
+      current_val = child.dfs(target_value)
+      return current_val if current_val
+    end
+
+    nil
   end
   
-  def children
-    @children
-  end
+  def bfs(target_value)
+    queue = [self]
+    
+    until queue.empty?
+      current_node = queue.shift
+      return current_node if current_node.value == target_value
+      current_node.children.each { |child| queue << child }
+    end
   
-  def value
-    @value
+    nil
   end
 end
 
