@@ -2,6 +2,7 @@ require_relative '00_tree_node.rb'
 require 'byebug'
 
 class KnightPathFinder
+  attr_reader :root_node
   
   def initialize(pos)
     @pos = pos
@@ -9,19 +10,39 @@ class KnightPathFinder
     @visited_positions = [pos]
   end
   
+  def build_move_tree(pos)
+    queue = [@root_node]
+    
+    until queue.empty?
+      current_node = queue.shift
+      new_move_positions(current_node.value).each do |move|
+        move_node = PolyTreeNode.new(move)
+        current_node.add_child(move_node)
+        queue << move_node
+      end
+    end
+  end
+  
   def self.valid_moves(pos)
-    # debugger
     valid_moves = []
     board_range = (0..7).to_a
     
-    (-1..1).each do |x|
-      (-1..1).each do |y|
-        new_move = pos[0] + x, pos[1] + y
-        valid_moves << new_move if new_move.all? { |el| board_range.include?(el) }
+    (-2..2).each do |x|
+      (-2..2).each do |y|
+        unless x == 0 || y == 0
+          if (x.abs == 2 && y.abs == 1) || (x.abs == 1 && y.abs == 2)
+            new_move = pos[0] + x, pos[1] + y
+            valid_moves << new_move if new_move.all? { |el| board_range.include?(el) }
+          end
+        end
       end
     end
     
     valid_moves    
+  end
+  
+  def find_path(end_pos)
+    
   end
   
   def new_move_positions(pos)
